@@ -30,21 +30,21 @@ jobs:
           # npm run test --if-present
         working-directory: sentiment-frontend
         
-      # - name: Copy standalone output to release folder
-      #   run: |
-      #     mkdir -p release
-      #     cp -r sentiment-frontend/.next/standalone/* release/
-      #     cp -r sentiment-frontend/public release/public
-      #     cp sentiment-frontend/package.json release/
-      #     cp -r sentiment-frontend/.next release/.next
-      #     cp sentiment-frontend/package.json release/
+      - name: Prepare release folder from standalone output
+        run: |
+          mkdir -p release
+          cp -r sentiment-frontend/.next/standalone/* release/
+          cp -r sentiment-frontend/.next/static release/.next/static
+          cp -r sentiment-frontend/.next/BUILD_ID release/.next/BUILD_ID
+          cp -r sentiment-frontend/public release/public
+          cp sentiment-frontend/package.json release/
 
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: sentiment-frontend
+          path: release/
 
   deploy:
     runs-on: ubuntu-latest
@@ -58,7 +58,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
-          path: app
+          path: node-app
 
       # - name: Unzip artifact for deployment
       #   run: unzip release.zip
@@ -69,5 +69,5 @@ jobs:
         with:
           app-name: 'assemblia-backend'
           slot-name: 'Production'
-          package: app
+          package: node-app
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AC1767BB6D594B1B83E89216B78C0DC8 }}
