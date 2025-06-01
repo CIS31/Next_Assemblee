@@ -32,12 +32,13 @@ jobs:
         
       - name: Prepare release folder from standalone output
         run: |
-          mkdir -p release
+          mkdir -p release/.next/static
           cp -r sentiment-frontend/.next/standalone/* release/
-          cp -r sentiment-frontend/.next/static release/.next/static
-          cp -r sentiment-frontend/.next/BUILD_ID release/.next/BUILD_ID
+          cp -r sentiment-frontend/.next/static/* release/.next/static
+          cp sentiment-frontend/.next/BUILD_ID release/.next/BUILD_ID
           cp -r sentiment-frontend/public release/public
           cp sentiment-frontend/package.json release/
+
 
 
       - name: Upload artifact for deployment job
