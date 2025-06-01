@@ -36,6 +36,7 @@ jobs:
           cp -r sentiment-frontend/.next/standalone/* release/
           cp -r sentiment-frontend/public release/public
           cp sentiment-frontend/package.json release/
+          cp -r sentiment-frontend/.next/server/app release/.next/server/app
 
 
       - name: Upload artifact for deployment job
