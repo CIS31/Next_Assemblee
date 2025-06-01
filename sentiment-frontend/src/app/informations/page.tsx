@@ -49,6 +49,15 @@ export default function HomePage() {
   //     .then((res) => setGroupes(res.data))
   //     .catch((err) => console.error('Erreur API Groupes:', err));
   // }, []);
+
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    fetch("/api/test")
+      .then((res) => res.json())
+      .then((data) => setMessage(data.message));
+  }, []);
+
   return (
     <Container sx={{ padding: '2rem' }}>
       <WelcomeCard />
@@ -177,6 +186,10 @@ export default function HomePage() {
         <source src="/videos/output.mp4" type="video/mp4" />
         Votre navigateur ne supporte pas la lecture de vidéo.
       </video>
+      <div>
+      <h1>Test API</h1>
+      <p>Message from API: {message}</p>
+      </div>
 
     </Container>
 
