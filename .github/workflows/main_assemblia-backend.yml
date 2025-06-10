@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy Node.js app to Azure Web App - assemblia-backend
 
 on:
@@ -13,31 +10,51 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
-
+      contents: read
+    
     steps:
       - uses: actions/checkout@v4
-
+      
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-
-      - name: npm install, build, and test
+          
+      - name: npm install and build
         run: |
           npm install
-          npm run build --if-present
-          # npm run test --if-present
-        working-directory: sentiment-frontend
+          npm run build
+        working-directory: sentiment-backend  # Changez selon votre vraie structure
         
-      - name: Prepare release folder from standalone output
+      - name: Debug - List build contents
+        run: |
+          echo "=== Contenu du dossier racine ==="
+          ls -la sentiment-backend/
+          echo "=== Contenu du dossier .next ==="
+          ls -la sentiment-backend/.next/ || echo "Pas de dossier .next"
+          echo "=== Contenu du dossier .next/standalone ==="
+          ls -la sentiment-backend/.next/standalone/ || echo "Pas de dossier standalone"
+          echo "=== Contenu du dossier .next/static ==="
+          ls -la sentiment-backend/.next/static/ || echo "Pas de dossier static"
+        
+      - name: Prepare release folder for standalone deployment
         run: |
           mkdir -p release
-          cp -r sentiment-frontend/.next/standalone/* release/
-          cp -r sentiment-frontend/.next/static release/.next/static
-          cp -r sentiment-frontend/public release/public
-          cp sentiment-frontend/package.json release/
-
+          # Copier le build standalone
+          cp -r sentiment-backend/.next/standalone/* release/
+          # Créer le dossier .next dans release
+          mkdir -p release/.next
+          # Copier les fichiers statiques seulement s'ils existent
+          if [ -d "sentiment-backend/.next/static" ]; then
+            cp -r sentiment-backend/.next/static release/.next/static
+          fi
+          # Copier public seulement s'il existe
+          if [ -d "sentiment-backend/public" ]; then
+            cp -r sentiment-backend/public release/public
+          fi
+          # Copier package.json
+          cp sentiment-backend/package.json release/
+          
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -57,10 +74,7 @@ jobs:
         with:
           name: node-app
           path: node-app
-
-      # - name: Unzip artifact for deployment
-      #   run: unzip release.zip
-      
+          
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
