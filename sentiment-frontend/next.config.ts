@@ -1,13 +1,28 @@
+// import type { NextConfig } from "next";
+
+// /** @type {import('next').NextConfig} */
+// const nextConfig = {
+//   output: 'standalone',
+// }
+
+// module.exports = nextConfig
+// // const nextConfig: NextConfig = {
+// //   output: "standalone",
+// // };
+
+// // export default nextConfig;
 import type { NextConfig } from "next";
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'standalone',
-}
+const nextConfig: NextConfig = {
+  output: "standalone",
+  outputFileTracingIncludes: {
+    '/': ['./public/**/*'],
+  },
+  images: {
+    unoptimized: true,
+  },
+  // Configuration pour Azure App Service
+  serverExternalPackages: []
+};
 
-module.exports = nextConfig
-// const nextConfig: NextConfig = {
-//   output: "standalone",
-// };
-
-// export default nextConfig;
+export default nextConfig;
