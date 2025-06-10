@@ -42,6 +42,7 @@ jobs:
           mkdir -p release
           # Copier le build standalone (tout le contenu)
           cp -r sentiment-frontend/.next/standalone/* release/
+          cp -r sentiment-frontend/.next/standalone/.next release/
           mkdir -p release/.next
           # Copier les fichiers statiques dans le bon dossier .next
           if [ -d "sentiment-frontend/.next/static" ]; then
