@@ -40,15 +40,14 @@ jobs:
       - name: Prepare release folder for standalone deployment
         run: |
           mkdir -p release
-          # Copier le build standalone (tout le contenu)
+          # Copier le build standalone complet
           cp -r sentiment-frontend/.next/standalone/* release/
-          cp -r sentiment-frontend/.next/standalone/.next release/
-          mkdir -p release/.next
-          # Copier les fichiers statiques dans le bon dossier .next
+          # Copier les fichiers statiques
           if [ -d "sentiment-frontend/.next/static" ]; then
+            mkdir -p release/.next
             cp -r sentiment-frontend/.next/static release/.next/static
           fi
-          # Copier le dossier public à la racine (pas dans .next)
+          # Copier le dossier public
           if [ -d "sentiment-frontend/public" ]; then
             cp -r sentiment-frontend/public release/
           fi
@@ -81,7 +80,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
-          path: node-app
+          path: .
           
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
@@ -89,5 +88,5 @@ jobs:
         with:
           app-name: 'assemblia-backend'
           slot-name: 'Production'
-          package: node-app
+          package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AC1767BB6D594B1B83E89216B78C0DC8 }}
