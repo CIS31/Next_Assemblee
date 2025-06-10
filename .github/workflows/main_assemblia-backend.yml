@@ -24,7 +24,7 @@ jobs:
         run: |
           npm install
           npm run build
-        working-directory: sentiment-backend  # Changez selon votre vraie structure
+        working-directory: sentiment-frontend
         
       - name: Debug - List build contents
         run: |
