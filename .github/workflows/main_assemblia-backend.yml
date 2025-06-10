@@ -40,20 +40,26 @@ jobs:
       - name: Prepare release folder for standalone deployment
         run: |
           mkdir -p release
-          # Copier le build standalone
+          # Copier le build standalone (tout le contenu)
           cp -r sentiment-frontend/.next/standalone/* release/
-          # Créer le dossier .next dans release
-          mkdir -p release/.next
-          # Copier les fichiers statiques seulement s'ils existent
+          # Copier les fichiers statiques dans le bon dossier .next
           if [ -d "sentiment-frontend/.next/static" ]; then
             cp -r sentiment-frontend/.next/static release/.next/static
           fi
-          # Copier public seulement s'il existe
+          # Copier le dossier public à la racine (pas dans .next)
           if [ -d "sentiment-frontend/public" ]; then
-            cp -r sentiment-frontend/public release/public
+            cp -r sentiment-frontend/public release/
           fi
-          # Copier package.json
-          cp sentiment-frontend/package.json release/
+          
+          
+      - name: Debug - Verify release structure
+        run: |
+          echo "=== Structure du dossier release ==="
+          ls -la release/
+          echo "=== Contenu de release/.next ==="
+          ls -la release/.next/ || echo "Pas de dossier .next dans release"
+          echo "=== Vérification du fichier server.js ==="
+          ls -la release/server.js || echo "Pas de server.js"
           
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
