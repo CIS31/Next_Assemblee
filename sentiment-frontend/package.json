@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "build": "next build && npm run copy-assets",
+    "copy-assets": "npm run copy-public && npm run copy-static",
+    "copy-public": "cp -r public .next/standalone/public || xcopy /E /I public .next\\standalone\\public",
+    "copy-static": "cp -r .next/static .next/standalone/.next/static || xcopy /E /I .next\\static .next\\standalone\\.next\\static",
+    "start": "node .next/standalone/server.js"
+
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
