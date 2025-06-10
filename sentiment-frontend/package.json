@@ -6,8 +6,8 @@
     "dev": "next dev",
     "build": "next build && npm run copy-assets",
     "copy-assets": "npm run copy-public && npm run copy-static",
-    "copy-public": "cp -r public .next/standalone/public || xcopy /E /I public .next\\standalone\\public",
-    "copy-static": "cp -r .next/static .next/standalone/.next/static || xcopy /E /I .next\\static .next\\standalone\\.next\\static",
+    "copy-public": "node -e \"const fs=require('fs'); if(fs.existsSync('public')) fs.cpSync('public', '.next/standalone/public', {recursive: true, force: true})\"",
+    "copy-static": "node -e \"const fs=require('fs'); if(fs.existsSync('.next/static')) { fs.mkdirSync('.next/standalone/.next', {recursive: true}); fs.cpSync('.next/static', '.next/standalone/.next/static', {recursive: true, force: true}); }\"",
     "start": "node .next/standalone/server.js"
 
   },
