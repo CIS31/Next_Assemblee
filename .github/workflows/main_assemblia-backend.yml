@@ -36,22 +36,36 @@ jobs:
           ls -la sentiment-frontend/.next/standalone/ || echo "Pas de dossier standalone"
           echo "=== Contenu du dossier .next/static ==="
           ls -la sentiment-frontend/.next/static/ || echo "Pas de dossier static"
-        
+      
       - name: Prepare release folder for standalone deployment
         run: |
           mkdir -p release
-          # Copier le build standalone complet
-          cp -r sentiment-frontend/.next/standalone/* release/
-          # Copier les fichiers statiques
+          # Copier TOUT le contenu de standalone, y compris les fichiers cachés
+          cp -r sentiment-frontend/.next/standalone/. release/
+          
+          # Vérifier et copier les fichiers statiques
           if [ -d "sentiment-frontend/.next/static" ]; then
             mkdir -p release/.next
             cp -r sentiment-frontend/.next/static release/.next/static
           fi
+          
           # Copier le dossier public
           if [ -d "sentiment-frontend/public" ]; then
             cp -r sentiment-frontend/public release/
           fi
           
+      - name: Debug - Verify release structure DETAILED
+        run: |
+          echo "=== Structure complète du dossier release ==="
+          find release -type f -name "*.js" | head -10
+          echo "=== Vérification server.js ==="
+          ls -la release/server.js || echo "❌ server.js manquant"
+          echo "=== Vérification .next ==="
+          ls -la release/.next/ || echo "❌ .next manquant"
+          echo "=== Vérification .next/static ==="
+          ls -la release/.next/static/ || echo "❌ .next/static manquant"
+          echo "=== Vérification public ==="
+          ls -la release/public/ || echo "❌ public manquant"
           
       - name: Debug - Verify release structure
         run: |
