@@ -29,31 +29,31 @@ jobs:
       - name: Debug - List build contents
         run: |
           echo "=== Contenu du dossier racine ==="
-          ls -la sentiment-backend/
+          ls -la sentiment-frontend/
           echo "=== Contenu du dossier .next ==="
-          ls -la sentiment-backend/.next/ || echo "Pas de dossier .next"
+          ls -la sentiment-frontend/.next/ || echo "Pas de dossier .next"
           echo "=== Contenu du dossier .next/standalone ==="
-          ls -la sentiment-backend/.next/standalone/ || echo "Pas de dossier standalone"
+          ls -la sentiment-frontend/.next/standalone/ || echo "Pas de dossier standalone"
           echo "=== Contenu du dossier .next/static ==="
-          ls -la sentiment-backend/.next/static/ || echo "Pas de dossier static"
+          ls -la sentiment-frontend/.next/static/ || echo "Pas de dossier static"
         
       - name: Prepare release folder for standalone deployment
         run: |
           mkdir -p release
           # Copier le build standalone
-          cp -r sentiment-backend/.next/standalone/* release/
+          cp -r sentiment-frontend/.next/standalone/* release/
           # Créer le dossier .next dans release
           mkdir -p release/.next
           # Copier les fichiers statiques seulement s'ils existent
-          if [ -d "sentiment-backend/.next/static" ]; then
-            cp -r sentiment-backend/.next/static release/.next/static
+          if [ -d "sentiment-frontend/.next/static" ]; then
+            cp -r sentiment-frontend/.next/static release/.next/static
           fi
           # Copier public seulement s'il existe
-          if [ -d "sentiment-backend/public" ]; then
-            cp -r sentiment-backend/public release/public
+          if [ -d "sentiment-frontend/public" ]; then
+            cp -r sentiment-frontend/public release/public
           fi
           # Copier package.json
-          cp sentiment-backend/package.json release/
+          cp sentiment-frontend/package.json release/
           
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
