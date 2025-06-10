@@ -26,6 +26,15 @@ jobs:
           npm run build
         working-directory: sentiment-frontend
         
+      - name: Debug - Check if .next exists in Azure deployment
+        run: |
+          echo "=== BUILD_ID content ==="
+          cat release/.next/BUILD_ID || echo "BUILD_ID missing"
+          echo "=== Required server files ==="
+          head -20 release/.next/required-server-files.json || echo "required-server-files.json missing"
+          echo "=== Server directory ==="
+          ls -la release/.next/server/ || echo "server directory missing"
+          
       - name: Debug - List build contents
         run: |
           echo "=== Contenu du dossier racine ==="
@@ -59,13 +68,13 @@ jobs:
           echo "=== Structure complète du dossier release ==="
           find release -type f -name "*.js" | head -10
           echo "=== Vérification server.js ==="
-          ls -la release/server.js || echo "❌ server.js manquant"
+          ls -la release/server.js || echo " server.js manquant"
           echo "=== Vérification .next ==="
-          ls -la release/.next/ || echo "❌ .next manquant"
+          ls -la release/.next/ || echo " .next manquant"
           echo "=== Vérification .next/static ==="
-          ls -la release/.next/static/ || echo "❌ .next/static manquant"
+          ls -la release/.next/static/ || echo " .next/static manquant"
           echo "=== Vérification public ==="
-          ls -la release/public/ || echo "❌ public manquant"
+          ls -la release/public/ || echo " public manquant"
           
       - name: Debug - Verify release structure
         run: |
