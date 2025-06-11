@@ -49,19 +49,31 @@ jobs:
       - name: Prepare release folder for standalone deployment
         run: |
           mkdir -p release
-          # Copier TOUT le contenu de standalone, y compris les fichiers cachés
-          cp -r sentiment-frontend/.next/standalone/. release/
+              # Copier tout le standalone
+              cp -r sentiment-frontend/.next/standalone/. release/
           
-          # Vérifier et copier les fichiers statiques
-          if [ -d "sentiment-frontend/.next/static" ]; then
-            mkdir -p release/.next/static
-            cp -r sentiment-frontend/.next/static/* release/.next/static/
-          fi
+              # Copier aussi tout le .next (pas que static !)
+              cp -r sentiment-frontend/.next release/.next
           
-          # Copier le dossier public
-          if [ -d "sentiment-frontend/public" ] && [ ! -d "release/public" ]; then
-            cp -r sentiment-frontend/public release/
-          fi
+              # Copier le dossier public
+              cp -r sentiment-frontend/public release/
+          
+              # Optionnel mais utile : package.json
+              cp sentiment-frontend/package.json release/
+              
+          # # Copier TOUT le contenu de standalone, y compris les fichiers cachés
+          # cp -r sentiment-frontend/.next/standalone/. release/
+          
+          # # Vérifier et copier les fichiers statiques
+          # if [ -d "sentiment-frontend/.next/static" ]; then
+          #   mkdir -p release/.next/static
+          #   cp -r sentiment-frontend/.next/static/* release/.next/static/
+          # fi
+          
+          # # Copier le dossier public
+          # if [ -d "sentiment-frontend/public" ] && [ ! -d "release/public" ]; then
+          #   cp -r sentiment-frontend/public release/
+          # fi
           
       - name: Debug - Verify release structure DETAILED
         run: |
