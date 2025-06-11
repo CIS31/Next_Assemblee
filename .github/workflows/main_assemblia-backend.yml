@@ -112,11 +112,15 @@ jobs:
           name: node-app
           path: node-app
           
+      - name: Move files to root for deployment
+        run: |
+          cp -r node-app/* .
+          
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'assemblia-backend'
           slot-name: 'Production'
-          package: node-app/
+          package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AC1767BB6D594B1B83E89216B78C0DC8 }}
