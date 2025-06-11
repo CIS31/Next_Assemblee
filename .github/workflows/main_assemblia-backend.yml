@@ -54,12 +54,12 @@ jobs:
           
           # Vérifier et copier les fichiers statiques
           if [ -d "sentiment-frontend/.next/static" ]; then
-            mkdir -p release/.next
-            cp -r sentiment-frontend/.next/static release/.next/static
+            mkdir -p release/.next/static
+            cp -r sentiment-frontend/.next/static/* release/.next/static/
           fi
           
           # Copier le dossier public
-          if [ -d "sentiment-frontend/public" ]; then
+          if [ -d "sentiment-frontend/public" ] && [ ! -d "release/public" ]; then
             cp -r sentiment-frontend/public release/
           fi
           
@@ -84,6 +84,13 @@ jobs:
           ls -la release/.next/ || echo "Pas de dossier .next dans release"
           echo "=== Vérification du fichier server.js ==="
           ls -la release/server.js || echo "Pas de server.js"
+      
+      - name: Debug - Verify critical files
+        run: |
+          echo "=== Verification des fichiers critiques ==="
+          ls -la release/.next/BUILD_ID && echo "✅ BUILD_ID présent" || echo "❌ BUILD_ID manquant"
+          ls -la release/.next/required-server-files.json && echo "✅ required-server-files.json présent" || echo "❌ required-server-files.json manquant"
+          ls -la release/.next/server/ && echo "✅ server/ présent" || echo "❌ server/ manquant"
           
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
