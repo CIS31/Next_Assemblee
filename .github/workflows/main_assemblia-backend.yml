@@ -25,52 +25,22 @@ jobs:
           npm install
           npm run build
         working-directory: sentiment-frontend
-        
-      - name: Debug - Check if .next exists in Azure deployment
-        run: |
-          echo "=== BUILD_ID content ==="
-          cat release/.next/BUILD_ID || echo "BUILD_ID missing"
-          echo "=== Required server files ==="
-          head -20 release/.next/required-server-files.json || echo "required-server-files.json missing"
-          echo "=== Server directory ==="
-          ls -la release/.next/server/ || echo "server directory missing"
-          
-      - name: Debug - List build contents
-        run: |
-          echo "=== Contenu du dossier racine ==="
-          ls -la sentiment-frontend/
-          echo "=== Contenu du dossier .next ==="
-          ls -la sentiment-frontend/.next/ || echo "Pas de dossier .next"
-          echo "=== Contenu du dossier .next/standalone ==="
-          ls -la sentiment-frontend/.next/standalone/ || echo "Pas de dossier standalone"
-          echo "=== Contenu du dossier .next/static ==="
-          ls -la sentiment-frontend/.next/static/ || echo "Pas de dossier static"
       
       - name: Prepare release folder for standalone deployment
         run: |
           mkdir -p release
-              # Copier tout le standalone
               cp -r sentiment-frontend/.next/standalone/. release/
-          
-              # Copier aussi tout le .next (pas que static !)
               cp -r sentiment-frontend/.next release/.next
-          
-              # Copier le dossier public
               cp -r sentiment-frontend/public release/
-          
-              # Optionnel mais utile : package.json
               cp sentiment-frontend/package.json release/
               
-          # # Copier TOUT le contenu de standalone, y compris les fichiers cachés
           # cp -r sentiment-frontend/.next/standalone/. release/
           
-          # # Vérifier et copier les fichiers statiques
           # if [ -d "sentiment-frontend/.next/static" ]; then
           #   mkdir -p release/.next/static
           #   cp -r sentiment-frontend/.next/static/* release/.next/static/
           # fi
           
-          # # Copier le dossier public
           # if [ -d "sentiment-frontend/public" ] && [ ! -d "release/public" ]; then
           #   cp -r sentiment-frontend/public release/
           # fi
@@ -100,9 +70,9 @@ jobs:
       - name: Debug - Verify critical files
         run: |
           echo "=== Verification des fichiers critiques ==="
-          ls -la release/.next/BUILD_ID && echo "✅ BUILD_ID présent" || echo "❌ BUILD_ID manquant"
-          ls -la release/.next/required-server-files.json && echo "✅ required-server-files.json présent" || echo "❌ required-server-files.json manquant"
-          ls -la release/.next/server/ && echo "✅ server/ présent" || echo "❌ server/ manquant"
+          ls -la release/.next/BUILD_ID && echo "BUILD_ID présent" || echo "BUILD_ID manquant"
+          ls -la release/.next/required-server-files.json && echo "required-server-files.json présent" || echo "required-server-files.json manquant"
+          ls -la release/.next/server/ && echo "server/ présent" || echo "server/ manquant"
           
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -124,7 +94,7 @@ jobs:
           name: node-app
           path: node-app
   
-      - name: 🧪 Log downloaded artifact structure
+      - name: Log downloaded artifact structure
         run: |
           echo "=== Contenu de node-app/ ==="
           ls -la node-app/
@@ -137,7 +107,7 @@ jobs:
         run: |
           rsync -av node-app/ .
   
-      - name: 📂 Log root structure before deployment
+      - name: Log root structure before deployment
         run: |
           echo "=== Contenu de la racine ==="
           ls -la
@@ -146,7 +116,7 @@ jobs:
           echo "=== Vérification de server.js ==="
           ls -la server.js || echo "server.js non trouvé"
   
-      - name: 🚀 Deploy to Azure Web App
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
