@@ -21,6 +21,7 @@ export async function GET() {
     return NextResponse.json({ data: res.rows });
   } catch (error) {
     console.error('DB Error:', error);
+
     return NextResponse.json({ error: 'Erreur lors de la requête à la base de données' }, { status: 500 });
   }
 }
