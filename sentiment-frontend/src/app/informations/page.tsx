@@ -24,15 +24,14 @@ const analyses = [
     link: '/textuelle',
   },
 ];
-// interface Depute {
-//   Nom: string;
-//   Prenom: string;
-//   Groupe: string;
-// }
-// interface Groupe {
-//   libelle: string;
-//   count: number;
-// }
+
+
+interface TestRow {
+  id: string;
+  name: string;
+}
+
+
 export default function HomePage() {
   // const [deputes, setDeputes] = useState<Depute[]>([]);
   // const [groupes, setGroupes] = useState<Groupe[]>([]);
@@ -51,21 +50,25 @@ export default function HomePage() {
   // }, []);
 
   const [message, setMessage] = useState("");
+  const [rows, setRows] = useState<TestRow[]>([]);
+
 
   useEffect(() => {
-    fetch("/api/test")
+    fetch('/api/test')
       .then((res) => res.json())
-      .then((data) => setMessage(data.message));
+      .then((data) => {
+        setRows(data.data || []);
+      })
+      .catch((err) => console.error('Erreur API:', err));
   }, []);
 
   return (
     <Container sx={{ padding: '2rem' }}>
       <WelcomeCard />
-      {/* rajout de ligne separateur */}
+
       <Divider sx={{ my: 4 }} />
       <Divider sx={{ my: 4 }} />
-      {/* rajout d'un titre */}
-      {/* rajout d'une descritpion */}
+
       <Typography variant="h6" sx={{ mt: 4 }}>
         Bienvenue sur l'application Assembl'IA !
         Le but de cette application est d'analyser via des modèles de machine learning les stratégies de communication des députés 
@@ -129,6 +132,18 @@ export default function HomePage() {
 
       <Divider sx={{ my: 4 }} />
       <Divider sx={{ my: 4 }} />
+
+      <div>
+  <h2>Données depuis PostgreSQL</h2>
+  <ul>
+    {rows.map((row) => (
+      <li key={row.id}>
+        {row.id} — {row.name}
+      </li>
+    ))}
+  </ul>
+</div>
+
 {/* 
       <Typography variant="h6" sx={{ mt: 6}}>
       Répartition actuelle des groupes politiques ainsi que le nombre de députés actifs dans chaque groupe, c'est-à-dire ceux ayant participé à au moins un vote :
@@ -186,10 +201,6 @@ export default function HomePage() {
         <source src="/videos/output.mp4" type="video/mp4" />
         Votre navigateur ne supporte pas la lecture de vidéo.
       </video>
-      <div>
-      <h1>Test API</h1>
-      <p>Message from API: {message}</p>
-      </div>
 
     </Container>
 
