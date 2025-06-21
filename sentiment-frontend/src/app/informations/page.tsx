@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Container, Typography, List, ListItem, ListItemText, Divider } from '@mui/material';
 import { Grid, Paper } from '@mui/material';
 import Link from 'next/link';
+import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
 
 const analyses = [
   {
@@ -26,9 +27,10 @@ const analyses = [
 ];
 
 
-interface TestRow {
-  id: string;
-  name: string;
+interface EmotionRow {
+  minute_group: number;
+  emotion: string;
+  count: number;
 }
 
 
@@ -50,17 +52,41 @@ export default function HomePage() {
   // }, []);
 
   const [message, setMessage] = useState("");
-  const [rows, setRows] = useState<TestRow[]>([]);
+  // const [rows, setRows] = useState<TestRow[]>([]);
+  const [chartData, setChartData] = useState<any[]>([]);
 
 
-  useEffect(() => {
-    fetch('/api/test')
-      .then((res) => res.json())
-      .then((data) => {
-        setRows(data.data || []);
-      })
-      .catch((err) => console.error('Erreur API:', err));
-  }, []);
+
+  // useEffect(() => {
+  //   fetch('/api/test')
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setRows(data.data || []);
+  //     })
+  //     .catch((err) => console.error('Erreur API:', err));
+  // }, []);
+useEffect(() => {
+  fetch('/api/test')
+    .then((res) => res.json())
+    .then((data) => {
+      const rows: EmotionRow[] = data.data;
+
+      // Transformer en { minute: 0, happy: 133, neutral: 19, ... }
+      const grouped: { [minute: number]: any } = {};
+
+      for (const row of rows) {
+        const minute = row.minute_group;
+        const emotion = row.emotion;
+        const count = parseInt(row.count.toString(), 10);
+
+        if (!grouped[minute]) grouped[minute] = { minute };
+        grouped[minute][emotion] = count;
+      }
+
+      setChartData(Object.values(grouped));
+    })
+    .catch((err) => console.error('Erreur API:', err));
+}, []);
 
   return (
     <Container sx={{ padding: '2rem' }}>
@@ -133,7 +159,7 @@ export default function HomePage() {
       <Divider sx={{ my: 4 }} />
       <Divider sx={{ my: 4 }} />
 
-      <div>
+      {/* <div>
   <h2>Données depuis PostgreSQL</h2>
   <ul>
     {rows.map((row) => (
@@ -142,7 +168,7 @@ export default function HomePage() {
       </li>
     ))}
   </ul>
-</div>
+</div> */}
 
 {/* 
       <Typography variant="h6" sx={{ mt: 6}}>
@@ -188,6 +214,17 @@ export default function HomePage() {
           </div>
         ))}
       </List> */}
+      {/* <video controls width="100%">
+      <source src="/api/test/video" type="video/mp4" />
+      </video> */}
+{/* <video
+  controls
+  width="100%"
+  style={{ marginTop: '2rem', borderRadius: '8px' }}
+>
+  <source src="https://azbstelecomparis.blob.core.windows.net/data/video/output/h264_output_video_test.mp4" type="video/mp4" />
+  Votre navigateur ne supporte pas la lecture de vidéo.
+</video>
 
       <Typography variant="h6" sx={{ mt: 4 }}>
         Vidéo exemple :
@@ -198,9 +235,9 @@ export default function HomePage() {
         width="100%"
         style={{ marginTop: '1rem', borderRadius: '8px' }}
       >
-        <source src="/videos/output.mp4" type="video/mp4" />
+        <source src="/videos/output_.mp4" type="video/mp4" />
         Votre navigateur ne supporte pas la lecture de vidéo.
-      </video>
+      </video> */}
 
     </Container>
 
