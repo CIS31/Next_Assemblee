@@ -174,7 +174,7 @@ useEffect(() => {
 
 
 
-      <Typography variant="h5" sx={{ mt: 6 }}>
+       <Typography variant="h5" sx={{ mt: 4, fontWeight: 'bold' }}>
         Évolution des émotions détectées par minute :
       </Typography>
 
