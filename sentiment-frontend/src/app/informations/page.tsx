@@ -3,7 +3,7 @@
 import WelcomeCard from '../../../components/WelcomeCard'; 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container, Typography, List, ListItem, ListItemText, Divider } from '@mui/material';
+import { Container, Typography, Box, Divider } from '@mui/material';
 import { Grid, Paper } from '@mui/material';
 import Link from 'next/link';
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
@@ -35,43 +35,18 @@ interface EmotionRow {
 
 
 export default function HomePage() {
-  // const [deputes, setDeputes] = useState<Depute[]>([]);
-  // const [groupes, setGroupes] = useState<Groupe[]>([]);
 
-  // useEffect(() => {
-  //   axios
-  //     .get('http://api/deputes') 
-  //     .then((res) => setDeputes(res.data))
-  //     .catch((err) => console.error('Erreur API:', err));
-  // }, []);
-  // useEffect(() => {
-  //   axios
-  //     .get('http://api/groupes')
-  //     .then((res) => setGroupes(res.data))
-  //     .catch((err) => console.error('Erreur API Groupes:', err));
-  // }, []);
 
   const [message, setMessage] = useState("");
   // const [rows, setRows] = useState<TestRow[]>([]);
   const [chartData, setChartData] = useState<any[]>([]);
 
 
-
-  // useEffect(() => {
-  //   fetch('/api/test')
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setRows(data.data || []);
-  //     })
-  //     .catch((err) => console.error('Erreur API:', err));
-  // }, []);
 useEffect(() => {
   fetch('/api/test')
     .then((res) => res.json())
     .then((data) => {
       const rows: EmotionRow[] = data.data;
-
-      // Transformer en { minute: 0, happy: 133, neutral: 19, ... }
       const grouped: { [minute: number]: any } = {};
 
       for (const row of rows) {
@@ -97,8 +72,9 @@ useEffect(() => {
 
       <Typography variant="h6" sx={{ mt: 4 }}>
         Bienvenue sur l'application Assembl'IA !
-        Le but de cette application est d'analyser via des modèles de machine learning les stratégies de communication des députés 
-
+        <br />
+        Ce projet a pour objectif d’analyser, à l’aide de modèles de machine learning, les stratégies de communication des députés au sein de l’hémicycle.
+Il a été développé en collaboration avec l’entreprise <strong>Seagus</strong> dans une démarche exploratoire mêlant intelligence artificielle et analyse comportementale.
       </Typography>
       <Divider sx={{ my: 4 }} />
       <Divider sx={{ my: 4 }} />
@@ -125,8 +101,8 @@ useEffect(() => {
             <Paper
               elevation={3}
               sx={{
-                px: 2,         // padding horizontal
-                py: 1.5,       // padding vertical réduit
+                px: 2,         
+                py: 1.5,     
                 backgroundColor: '#E6E6FA',
                 borderRadius: 2,
               }}
@@ -158,86 +134,42 @@ useEffect(() => {
 
       <Divider sx={{ my: 4 }} />
       <Divider sx={{ my: 4 }} />
+      <Box sx={{ mt: 6, px: 2, py: 3, backgroundColor: '#f5f5f5', borderRadius: 2 }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
+          Mentions légales
+        </Typography>
 
-      {/* <div>
-  <h2>Données depuis PostgreSQL</h2>
-  <ul>
-    {rows.map((row) => (
-      <li key={row.id}>
-        {row.id} — {row.name}
-      </li>
-    ))}
-  </ul>
-</div> */}
+        <Typography variant="body2" sx={{ lineHeight: 1.8 }}>
+          Ce projet vise avant tout à mettre en place un pipeline de traitement audio sur Azure, 
+          associé à des expérimentations autour de modèles de machine learning.  
+          Les résultats présentés sont purement illustratifs et n’ont aucune visée politique ni interprétative.
+          <br /><br />
+          Nous utilisons, adaptons et exploitons des données publiques mises à disposition sous <strong>Licence Ouverte</strong> 
+          par l’Assemblée nationale, via :
+          <ul style={{ marginTop: '0.5rem', paddingLeft: '2rem' }}>
+            <li>
+              <a href="https://data.assemblee-nationale.fr" target="_blank" rel="noopener noreferrer">
+                data.assemblee-nationale.fr
+              </a>
+            </li>
+            <li>
+              <a href="https://videos.assemblee-nationale.fr" target="_blank" rel="noopener noreferrer">
+                videos.assemblee-nationale.fr
+              </a>
+            </li>
+            <li>
+              <a href="https://www.assemblee-nationale.fr/" target="_blank" rel="noopener noreferrer">
+                assemblee-nationale.fr
+              </a>
+            </li>
+          </ul>
+          <br />
+          <strong>La responsabilité de l’Assemblée nationale ne saurait être engagée en cas d’erreur.</strong>
+          <br />
+          <strong>Dernière mise à jour :</strong> 23 juin 2025
+        </Typography>
+      </Box>
 
-{/* 
-      <Typography variant="h6" sx={{ mt: 6}}>
-      Répartition actuelle des groupes politiques ainsi que le nombre de députés actifs dans chaque groupe, c'est-à-dire ceux ayant participé à au moins un vote :
-      </Typography>
-      <Divider sx={{ my: 4 }} />
-      <Divider sx={{ my: 4 }} />
-      <Grid container spacing={2}>
-        {groupes.map((groupe, index) => (
-          <Grid item xs={6} sm={4} md={3} key={index}>
-            <Paper
-              elevation={2}
-              sx={{
-                textAlign: 'center',
-                padding: 2,
-                borderRadius: 2,
-              }}
-            >
-              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              {groupe.libelle}
-              </Typography>
-              <Typography variant="body1">{groupe.count}</Typography>
-            </Paper>
-          </Grid>
-        ))}
-      </Grid>
-
-      <Divider sx={{ my: 4 }} />
-      <Typography variant="h6" sx={{ mt: 4 }}>
-        5 premiers députés :
-      </Typography>
-
-      <List>
-        {deputes.map((dep, index) => (
-          <div key={index}>
-            <ListItem>
-              <ListItemText
-                primary={`${dep.Nom} (${dep.Prenom})`}
-                secondary={`Groupe : ${dep.Groupe}`}
-              />
-            </ListItem>
-            <Divider />
-          </div>
-        ))}
-      </List> */}
-      {/* <video controls width="100%">
-      <source src="/api/test/video" type="video/mp4" />
-      </video> */}
-{/* <video
-  controls
-  width="100%"
-  style={{ marginTop: '2rem', borderRadius: '8px' }}
->
-  <source src="https://azbstelecomparis.blob.core.windows.net/data/video/output/h264_output_video_test.mp4" type="video/mp4" />
-  Votre navigateur ne supporte pas la lecture de vidéo.
-</video>
-
-      <Typography variant="h6" sx={{ mt: 4 }}>
-        Vidéo exemple :
-      </Typography>
-
-      <video
-        controls
-        width="100%"
-        style={{ marginTop: '1rem', borderRadius: '8px' }}
-      >
-        <source src="/videos/output_.mp4" type="video/mp4" />
-        Votre navigateur ne supporte pas la lecture de vidéo.
-      </video> */}
 
     </Container>
 

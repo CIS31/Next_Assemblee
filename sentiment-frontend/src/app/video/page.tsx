@@ -44,36 +44,11 @@ interface EmotionRow {
 
 
 export default function HomePage() {
-  // const [deputes, setDeputes] = useState<Depute[]>([]);
-  // const [groupes, setGroupes] = useState<Groupe[]>([]);
-
-  // useEffect(() => {
-  //   axios
-  //     .get('http://api/deputes') 
-  //     .then((res) => setDeputes(res.data))
-  //     .catch((err) => console.error('Erreur API:', err));
-  // }, []);
-  // useEffect(() => {
-  //   axios
-  //     .get('http://api/groupes')
-  //     .then((res) => setGroupes(res.data))
-  //     .catch((err) => console.error('Erreur API Groupes:', err));
-  // }, []);
 
   const [message, setMessage] = useState("");
-  // const [rows, setRows] = useState<TestRow[]>([]);
   const [chartData, setChartData] = useState<any[]>([]);
 
 
-
-  // useEffect(() => {
-  //   fetch('/api/test')
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setRows(data.data || []);
-  //     })
-  //     .catch((err) => console.error('Erreur API:', err));
-  // }, []);
 useEffect(() => {
   fetch('/api/test')
     .then((res) => res.json())
@@ -109,7 +84,7 @@ useEffect(() => {
        Fonctionnalités principales :
       </Typography>
       <Typography variant="h6" sx={{ mt: 4 }}>
-      L’analyse commence par une lecture image par image de la vidéo, permettant une granularité fine dans l’étude des séquences. À chaque frame, le système détecte automatiquement les visages présents dans la scène. Lorsqu’un visage est suffisamment grand et bien visible, une analyse des émotions est déclenchée. Les deux émotions dominantes sont alors identifiées et directement annotées sur la vidéo. En parallèle, une timeline CSV est générée, retraçant pour chaque minute les émotions détectées, ce qui facilite leur visualisation et leur exploitation.
+      L’analyse commence par une lecture image par image de la vidéo. Afin d’alléger le traitement, le système ne traite qu’une image sur dix, ce qui correspond à un échantillonnage raisonnable tout en conservant une bonne précision. Lorsqu’un visage est suffisamment grand et bien visible, une analyse des émotions est déclenchée. Les deux émotions dominantes sont alors identifiées et directement annotées sur la vidéo. En parallèle, une timeline CSV est générée, retraçant pour chaque minute les émotions détectées, ce qui facilite leur visualisation et leur exploitation.
       </Typography>
       <Divider sx={{ my: 4 }} />
       <Divider sx={{ my: 4 }} />
@@ -217,19 +192,6 @@ useEffect(() => {
       </LineChart>
 
 
-{/* 
-      <Typography variant="h6" sx={{ mt: 4 }}>
-        Vidéo exemple :
-      </Typography>
-
-      <video
-        controls
-        width="100%"
-        style={{ marginTop: '1rem', borderRadius: '8px' }}
-      >
-        <source src="/videos/output_.mp4" type="video/mp4" />
-        Votre navigateur ne supporte pas la lecture de vidéo.
-      </video> */}
 
     </Container>
 

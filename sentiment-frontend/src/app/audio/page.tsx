@@ -68,7 +68,7 @@ export default function AudioPage() {
   const speakers = Object.keys(ganttData);
   const rowHeight = 30;
   const barHeight = 14;
-  const leftMargin = 100;
+  const leftMargin = 120;
   const pixelsPerSecond = 2;
   const tickInterval = 120;
 
@@ -85,16 +85,28 @@ export default function AudioPage() {
   };
 
   const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b'];
-const [pitchData, setPitchData] = useState<Record<string, { speaker: string; time: number; pitch: number }[]>>({});
+  const [pitchData, setPitchData] = useState<Record<string, { speaker: string; time: number; pitch: number }[]>>({});
 
   return (
       <Container sx={{ padding: '2rem' }}>
       <WelcomeCardaudio />
+      <Divider sx={{ my: 4 }} />
+      <Divider sx={{ my: 4 }} />
 
+      <Typography variant="h5" sx={{ mt: 4, fontWeight: 'bold' }}>
+       Objectifs de l’analyse :
+      </Typography>
+      <Typography variant="h6" sx={{ mt: 4 }}>
+      Cette analyse se concentre sur l’extraction et l’étude des caractéristiques prosodiques du langage parlé, ainsi que sur la diarisation des locuteurs.
+      <br />
+      L’objectif principal est de répondre aux questions : “Qui parle, quand, et comment ?”
+      Cela inclut la détection de la hauteur (pitch) et de l’intensité (volume) de la voix, permettant une compréhension des dynamiques vocales et des interactions entre intervenants.
+      </Typography>
       <Divider sx={{ my: 4 }} />
       <Divider sx={{ my: 4 }} />
       <Typography variant="h5" sx={{ mt: 4, fontWeight: 'bold' }}>
         Gantt des Prises de Parole
+        <br />
       </Typography>
 
       <Box sx={{ overflowX: 'auto', width: '100%', mb: 4 }}>
@@ -157,6 +169,7 @@ const [pitchData, setPitchData] = useState<Record<string, { speaker: string; tim
       {/* LINE CHART INTENSITY */}
       <Typography variant="h5" sx={{ mt: 4, fontWeight: 'bold' }}>
         Intensité sonore (dB)
+        <br />
       </Typography>
       <ResponsiveContainer width="100%" height={400}>
         <LineChart>
@@ -191,6 +204,7 @@ const [pitchData, setPitchData] = useState<Record<string, { speaker: string; tim
       {/* PITCH GRAPH */}
       <Typography variant="h5" sx={{ mt: 4, fontWeight: 'bold' }}>
         Hauteur de voix (Hz)
+        <br />
       </Typography>
       <ResponsiveContainer width="100%" height={400}>
         <LineChart>
